@@ -1,0 +1,29 @@
+# Build artifacts
+.pio/
+.pio/**
+
+# IDE
+.vscode/
+.idea/
+
+# Secrets — NEVER send to build context
+include/config.h
+
+# Documentation (not needed for build)
+Master_Docs/
+README.md
+
+# Docker files (prevent recursive context)
+Dockerfile
+docker-compose.yml
+
+# Git
+.git/
+.gitignore
+
+# OS artifacts
+.DS_Store
+Thumbs.db
+
+# Test directory (not needed for firmware build)
+test/

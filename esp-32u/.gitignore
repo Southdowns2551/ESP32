@@ -1,0 +1,6 @@
+.pio
+.vscode
+include/config.h
+.env
+output/
+wifi_creds.txt

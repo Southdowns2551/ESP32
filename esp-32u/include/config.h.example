@@ -1,0 +1,15 @@
+/**
+ * @file config.h.example
+ * @brief Configuration template. Copy to config.h and fill in your values.
+ *        config.h is git-ignored and must never be committed.
+ */
+
+#ifndef CONFIG_H
+#define CONFIG_H
+
+#define WIFI_SSID     "YOUR_SSID"
+#define WIFI_PASSWORD "YOUR_PASSWORD"
+
+#define BLE_DEVICE_NAME "ESP32U"
+
+#endif

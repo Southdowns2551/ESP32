@@ -1,0 +1,67 @@
+services:
+  build:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: builder
+      secrets:
+        - wifi_creds
+      args:
+        BLE_DEVICE_NAME: ${BLE_DEVICE_NAME:-ESP32U}
+    image: esp32u-builder
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp:size=64M
+    volumes:
+      - ./output:/home/pio/project/output
+    entrypoint: ["/bin/bash", "/home/pio/project/scripts/entrypoint.sh"]
+    command: ["build"]
+
+  extract:
+    image: esp32u-builder
+    depends_on:
+      build:
+        condition: service_completed_successfully
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    volumes:
+      - ./output:/home/pio/project/output
+    entrypoint: ["/bin/bash", "/home/pio/project/scripts/entrypoint.sh"]
+    command: ["extract"]
+
+  flash:
+    image: esp32u-builder
+    depends_on:
+      build:
+        condition: service_completed_successfully
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp:size=64M
+    devices:
+      - ${SERIAL_PORT:-/dev/cu.usbserial-0001}:${SERIAL_PORT:-/dev/cu.usbserial-0001}
+    entrypoint: ["/bin/bash", "/home/pio/project/scripts/entrypoint.sh"]
+    command: ["flash"]
+
+  monitor:
+    image: esp32u-builder
+    depends_on:
+      build:
+        condition: service_completed_successfully
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    devices:
+      - ${SERIAL_PORT:-/dev/cu.usbserial-0001}:${SERIAL_PORT:-/dev/cu.usbserial-0001}
+    stdin_open: true
+    tty: true
+    entrypoint: ["/bin/bash", "/home/pio/project/scripts/entrypoint.sh"]
+    command: ["monitor"]
+
+secrets:
+  wifi_creds:
+    file: ./wifi_creds.txt
